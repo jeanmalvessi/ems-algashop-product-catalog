@@ -1,0 +1,19 @@
+= AlgaShop Documentation
+
+== Introduction
+This is an example of Spring REST Docs generated documentation.
+
+== Product Catalog API
+Collection of CRUD API endpoints used to manipulate products registered in the application.
+
+=== Get Product By Id
+Obtains a specific product registered in the application by its unique identifier.
+
+==== Sample Request
+include::{snippets}/product-test/validate_find-product-by-id-v1/http-request.adoc[]
+
+==== Sample Response
+include::{snippets}/product-test/validate_find-product-by-id-v1/http-response.adoc[]
+
+==== CURL sample
+include::{snippets}/product-test/validate_find-product-by-id-v1/curl-request.adoc[]

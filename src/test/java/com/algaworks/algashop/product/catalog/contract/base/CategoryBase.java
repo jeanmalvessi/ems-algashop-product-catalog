@@ -2,10 +2,10 @@ package com.algaworks.algashop.product.catalog.contract.base;
 
 import com.algaworks.algashop.product.catalog.application.PageModel;
 import com.algaworks.algashop.product.catalog.application.category.management.CategoryInput;
-import com.algaworks.algashop.product.catalog.application.category.management.CategoryManagementService;
+import com.algaworks.algashop.product.catalog.application.category.management.CategoryManagementApplicationService;
 import com.algaworks.algashop.product.catalog.application.category.query.CategoryDetailOutput;
 import com.algaworks.algashop.product.catalog.application.category.query.CategoryOutputTestDataBuilder;
-import com.algaworks.algashop.product.catalog.application.category.query.CategoryQueryService;
+import com.algaworks.algashop.product.catalog.application.category.query.CategoryQueryApplicationService;
 import com.algaworks.algashop.product.catalog.presentation.CategoryController;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,10 +27,10 @@ public class CategoryBase {
     private WebApplicationContext context;
 
     @MockitoBean
-    private CategoryQueryService categoryQueryService;
+    private CategoryQueryApplicationService categoryQueryApplicationService;
 
     @MockitoBean
-    private CategoryManagementService categoryManagementService;
+    private CategoryManagementApplicationService categoryManagementApplicationService;
 
     public static final UUID validCategoryId = UUID.fromString("f5ab7a1e-37da-41e1-892b-a1d38275c2f2");
 
@@ -43,7 +43,7 @@ public class CategoryBase {
 
         RestAssuredMockMvc.enableLoggingOfRequestAndResponseIfValidationFails();
 
-        Mockito.when(categoryQueryService.filter(Mockito.anyInt(), Mockito.anyInt()))
+        Mockito.when(categoryQueryApplicationService.filter(Mockito.anyInt(), Mockito.anyInt()))
                 .then((answer)-> {
                     Integer size = answer.getArgument(0);
                     return PageModel.<CategoryDetailOutput>builder()
@@ -59,13 +59,13 @@ public class CategoryBase {
                             ).build();
                 });
 
-        Mockito.when(categoryQueryService.findById(validCategoryId))
+        Mockito.when(categoryQueryApplicationService.findById(validCategoryId))
                 .thenReturn(CategoryOutputTestDataBuilder.aCategory().id(validCategoryId).build());
 
-        Mockito.when(categoryManagementService.create(Mockito.any(CategoryInput.class)))
+        Mockito.when(categoryManagementApplicationService.create(Mockito.any(CategoryInput.class)))
                 .thenReturn(createdCategoryId);
 
-        Mockito.when(categoryQueryService.findById(createdCategoryId))
+        Mockito.when(categoryQueryApplicationService.findById(createdCategoryId))
                 .thenReturn(CategoryOutputTestDataBuilder.aCategory().id(createdCategoryId).build());
     }
 }

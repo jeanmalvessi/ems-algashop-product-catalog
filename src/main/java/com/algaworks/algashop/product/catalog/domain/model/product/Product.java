@@ -2,10 +2,13 @@ package com.algaworks.algashop.product.catalog.domain.model.product;
 
 import com.algaworks.algashop.product.catalog.domain.model.DomainException;
 import com.algaworks.algashop.product.catalog.domain.model.IdGenerator;
+import com.algaworks.algashop.product.catalog.domain.model.category.Category;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -51,9 +54,13 @@ public class Product {
     @LastModifiedBy
     private UUID lastModifiedByUserId;
 
+    @DocumentReference
+    @Field(name = "categoryId")
+    private Category category;
+
     @Builder
-    public Product(String name, String brand, String description,
-                   Boolean enabled, BigDecimal regularPrice, BigDecimal salePrice) {
+    public Product(String name, String brand, String description, Boolean enabled,
+                   BigDecimal regularPrice, BigDecimal salePrice, Category category) {
         this.setId(IdGenerator.generateTimeBasedUUID());
         this.setName(name);
         this.setBrand(brand);
@@ -61,6 +68,7 @@ public class Product {
         this.setEnabled(enabled);
         this.setRegularPrice(regularPrice);
         this.setSalePrice(salePrice);
+        this.setCategory(category);
     }
 
     public void setName(String name) {
@@ -107,6 +115,11 @@ public class Product {
             throw new DomainException("Sale price cannot be greater than regular price");
         }
         this.salePrice = salePrice;
+    }
+
+    public void setCategory(Category category) {
+        Objects.requireNonNull(category);
+        this.category = category;
     }
 
     public void setEnabled(Boolean enabled) {

@@ -78,7 +78,11 @@ class ProductBase {
     }
 
     private void mockFilterProducts() {
-        Mockito.when(productQueryService.filter(Mockito.anyInt(), Mockito.anyInt()))
+        ProductFilter filter = new ProductFilter();
+        filter.setPage(Mockito.anyInt());
+        filter.setSize(Mockito.anyInt());
+
+        Mockito.when(productQueryService.filter(filter))
             .then((answer)-> {
                 Integer size = answer.getArgument(0);
 

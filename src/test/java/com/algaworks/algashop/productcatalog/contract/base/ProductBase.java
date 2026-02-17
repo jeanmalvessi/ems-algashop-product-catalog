@@ -4,7 +4,7 @@ import com.algaworks.algashop.productcatalog.application.PageModel;
 import com.algaworks.algashop.productcatalog.application.ResourceNotFoundException;
 import com.algaworks.algashop.productcatalog.application.product.management.ProductInput;
 import com.algaworks.algashop.productcatalog.application.product.management.ProductManagementApplicationService;
-import com.algaworks.algashop.product.catalog.application.product.query.*;
+import com.algaworks.algashop.productcatalog.application.product.query.*;
 import com.algaworks.algashop.productcatalog.application.product.query.ProductDetailOutput;
 import com.algaworks.algashop.productcatalog.application.product.query.ProductDetailOutputTestDataBuilder;
 import com.algaworks.algashop.productcatalog.application.product.query.ProductQueryService;

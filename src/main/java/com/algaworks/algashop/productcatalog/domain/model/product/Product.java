@@ -6,6 +6,8 @@ import com.algaworks.algashop.productcatalog.domain.model.category.Category;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.annotation.*;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -20,6 +22,10 @@ import java.util.UUID;
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@CompoundIndex(name = "idx_product_by_category_enabled_salePrice", 
+    def = "{'categoryId': 1, 'enabled': 1, 'salePrice': 1}")
+@CompoundIndex(name = "idx_product_by_category_enabled_addedAt",
+    def = "{'categoryId': 1, 'enabled': 1, 'addedAt': -1}")
 public class Product {
 
     @Id
@@ -28,6 +34,7 @@ public class Product {
 
     private String name;
 
+    @Indexed(name = "idx_product_by_brand")
     private String brand;
 
     private String description;
@@ -56,6 +63,7 @@ public class Product {
     private UUID lastModifiedByUserId;
 
     @DocumentReference
+    //@Indexed(name = "idx_product_by_category")
     @Field(name = "categoryId")
     private Category category;
 

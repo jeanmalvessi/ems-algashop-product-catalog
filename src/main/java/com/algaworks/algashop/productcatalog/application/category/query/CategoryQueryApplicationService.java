@@ -5,6 +5,6 @@ import com.algaworks.algashop.productcatalog.application.PageModel;
 import java.util.UUID;
 
 public interface CategoryQueryApplicationService {
-    PageModel<CategoryDetailOutput> filter(Integer size, Integer number);
+    PageModel<CategoryDetailOutput> filter(CategoryFilter filter);
     CategoryDetailOutput findById(UUID categoryId);
 }

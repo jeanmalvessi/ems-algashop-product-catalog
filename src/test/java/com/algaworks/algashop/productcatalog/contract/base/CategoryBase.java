@@ -1,9 +1,7 @@
 package com.algaworks.algashop.productcatalog.contract.base;
 
-import com.algaworks.algashop.productcatalog.application.PageModel;
 import com.algaworks.algashop.productcatalog.application.category.management.CategoryInput;
 import com.algaworks.algashop.productcatalog.application.category.management.CategoryManagementApplicationService;
-import com.algaworks.algashop.productcatalog.application.category.query.CategoryDetailOutput;
 import com.algaworks.algashop.productcatalog.application.category.query.CategoryOutputTestDataBuilder;
 import com.algaworks.algashop.productcatalog.application.category.query.CategoryQueryApplicationService;
 import com.algaworks.algashop.productcatalog.presentation.CategoryController;
@@ -17,7 +15,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.UUID;
 
 @WebMvcTest(controllers = CategoryController.class)
@@ -43,7 +40,7 @@ public class CategoryBase {
 
         RestAssuredMockMvc.enableLoggingOfRequestAndResponseIfValidationFails();
 
-        Mockito.when(categoryQueryApplicationService.filter(Mockito.anyInt(), Mockito.anyInt()))
+        /*Mockito.when(categoryQueryApplicationService.filter(Mockito.anyInt(), Mockito.anyInt()))
                 .then((answer)-> {
                     Integer size = answer.getArgument(0);
                     return PageModel.<CategoryDetailOutput>builder()
@@ -57,7 +54,7 @@ public class CategoryBase {
                                             CategoryOutputTestDataBuilder.aDisabledCategory().build()
                                     )
                             ).build();
-                });
+                });*/
 
         Mockito.when(categoryQueryApplicationService.findById(validCategoryId))
                 .thenReturn(CategoryOutputTestDataBuilder.aCategory().id(validCategoryId).build());

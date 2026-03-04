@@ -15,10 +15,10 @@ logging:
     org.mongodb.driver.connection: DEBUG
 algashop:
   data-load:
-    enabled: false
-    auto-drop: false
+    enabled: true
+    auto-delete: true
     sources:
       - location: db/testdata/categories.json
         collection: categories
-      - location: db/testdata/products-large.json
+      - location: db/testdata/products.json
         collection: products

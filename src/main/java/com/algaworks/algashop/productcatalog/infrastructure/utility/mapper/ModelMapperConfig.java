@@ -1,11 +1,9 @@
 package com.algaworks.algashop.productcatalog.infrastructure.utility.mapper;
 
 import com.algaworks.algashop.productcatalog.application.product.query.ProductDetailOutput;
-import com.algaworks.algashop.productcatalog.application.product.query.ProductSummaryOutput;
 import com.algaworks.algashop.productcatalog.application.utility.Mapper;
 import com.algaworks.algashop.productcatalog.domain.model.product.Product;
 import com.algaworks.algashop.productcatalog.infrastructure.utility.Slugfier;
-import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;

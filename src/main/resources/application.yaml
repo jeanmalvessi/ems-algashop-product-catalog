@@ -15,7 +15,7 @@ logging:
     org.mongodb.driver.connection: DEBUG
 algashop:
   data-load:
-    enabled: true
+    enabled: false
     auto-delete: true
     sources:
       - location: db/testdata/categories.json

@@ -3,15 +3,22 @@ package com.algaworks.algashop.productcatalog.domain.model.product;
 import com.algaworks.algashop.productcatalog.domain.model.DomainException;
 import com.algaworks.algashop.productcatalog.domain.model.IdGenerator;
 import com.algaworks.algashop.productcatalog.domain.model.category.Category;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.annotation.*;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.DocumentReference;
-import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.TextScore;
 
 import java.math.BigDecimal;
@@ -68,10 +75,9 @@ public class Product {
     @LastModifiedBy
     private UUID lastModifiedByUserId;
 
-    @DocumentReference
-    //@Indexed(name = "idx_product_by_category")
-    @Field(name = "categoryId")
-    private Category category;
+    private UUID categoryId;
+    
+    private ProductCategory category;
 
     private Integer discountPercentageRounded;
     
@@ -141,7 +147,8 @@ public class Product {
 
     public void setCategory(Category category) {
         Objects.requireNonNull(category);
-        this.category = category;
+        this.categoryId = category.getId();
+        this.category = ProductCategory.of(category);
     }
 
     public void setEnabled(Boolean enabled) {

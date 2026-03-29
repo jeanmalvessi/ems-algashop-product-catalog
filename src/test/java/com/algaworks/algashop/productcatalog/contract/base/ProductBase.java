@@ -5,9 +5,6 @@ import com.algaworks.algashop.productcatalog.application.ResourceNotFoundExcepti
 import com.algaworks.algashop.productcatalog.application.product.management.ProductInput;
 import com.algaworks.algashop.productcatalog.application.product.management.ProductManagementApplicationService;
 import com.algaworks.algashop.productcatalog.application.product.query.*;
-import com.algaworks.algashop.productcatalog.application.product.query.ProductDetailOutput;
-import com.algaworks.algashop.productcatalog.application.product.query.ProductDetailOutputTestDataBuilder;
-import com.algaworks.algashop.productcatalog.application.product.query.ProductQueryService;
 import com.algaworks.algashop.productcatalog.presentation.ProductController;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,7 +49,7 @@ class ProductBase {
                         .snippets().withTemplateFormat(TemplateFormats.asciidoctor())
                         .and().operationPreprocessors()
                         .withResponseDefaults(Preprocessors.prettyPrint()))
-                .alwaysDo(MockMvcRestDocumentation.document("{class-name}/{method-name}"))
+                .alwaysDo(MockMvcRestDocumentation.document("{ClassName}/{methodName}"))
                 .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
                 .build());
 
@@ -78,17 +75,13 @@ class ProductBase {
     }
 
     private void mockFilterProducts() {
-        ProductFilter filter = new ProductFilter();
-        filter.setPage(Mockito.anyInt());
-        filter.setSize(Mockito.anyInt());
-
-        Mockito.when(productQueryService.filter(filter))
-            .then((answer)-> {
-                Integer size = answer.getArgument(0);
+        Mockito.when(productQueryService.filter(Mockito.any()))
+            .then(answer -> {
+                ProductFilter filter = answer.getArgument(0);
 
                 return PageModel.<ProductDetailOutput>builder()
                     .number(0)
-                    .size(size)
+                    .size(filter.getSize())
                     .totalPages(1)
                     .totalElements(2)
                     .content(

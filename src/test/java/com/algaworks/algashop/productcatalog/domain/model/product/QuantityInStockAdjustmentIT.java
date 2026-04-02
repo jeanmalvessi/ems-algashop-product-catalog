@@ -1,5 +1,6 @@
 package com.algaworks.algashop.productcatalog.domain.model.product;
 
+import com.algaworks.algashop.productcatalog.TestcontainerMongoDBConfig;
 import com.algaworks.algashop.productcatalog.infrastructure.persistence.MongoConfig;
 import com.algaworks.algashop.productcatalog.infrastructure.persistence.dataload.DataLoadProperties;
 import com.algaworks.algashop.productcatalog.infrastructure.persistence.dataload.DataLoader;
@@ -11,15 +12,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.DefaultApplicationArguments;
 import org.springframework.boot.data.mongodb.test.autoconfigure.DataMongoTest;
 import org.springframework.context.annotation.Import;
+//import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
 @DataMongoTest
+//@Transactional
 @Import({
     MongoConfig.class,
     QuantityInStockAdjustmentMongoDBImpl.class,
     DataLoader.class,
-    DataLoadProperties.class
+    DataLoadProperties.class,
+    TestcontainerMongoDBConfig.class
 })
 class QuantityInStockAdjustmentIT {
 

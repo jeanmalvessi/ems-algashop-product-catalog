@@ -112,7 +112,7 @@ public class ProductQueryServiceImpl implements ProductQueryService {
                 .and("category._id").as("category._id")
                 .and("category.name").as("category.name");*/
 
-        return project(ProductSummaryOutput.class)
+        return project(ProductDetailOutput.class)
                 .andExpression("salePrice < regularPrice").as("hasDiscount")
                 .andExpression("quantityInStock > 0").as("inStock")
                 .and(StringOperators.Substr.valueOf("description")

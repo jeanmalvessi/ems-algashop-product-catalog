@@ -1,5 +1,7 @@
 package com.algaworks.algashop.productcatalog.application.product.management;
 
+import com.algaworks.algashop.productcatalog.application.product.query.ProductDetailOutput;
+import com.algaworks.algashop.productcatalog.application.utility.Mapper;
 import com.algaworks.algashop.productcatalog.domain.model.category.Category;
 import com.algaworks.algashop.productcatalog.domain.model.category.CategoryNotFoundException;
 import com.algaworks.algashop.productcatalog.domain.model.category.CategoryRepository;
@@ -11,6 +13,7 @@ import com.algaworks.algashop.productcatalog.domain.model.product.StockMovementR
 import com.algaworks.algashop.productcatalog.domain.model.product.StockService;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,15 +26,20 @@ public class ProductManagementApplicationService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final StockMovementRepository stockRepository;
+
     private final StockService stockService;
 
-    public UUID create(ProductInput input) {
+    private final Mapper mapper;
+
+    @CachePut(cacheNames = "algashop:products:v1", key = "#result.id", condition = "#input.enabled == true")
+    public ProductDetailOutput create(ProductInput input) {
         Product product = mapToProduct(input);
         productRepository.save(product);
-        return product.getId();
+        return mapper.convert(product, ProductDetailOutput.class);
     }
 
-    public void update(UUID productId, ProductInput input) {
+    @CachePut(cacheNames = "algashop:products:v1", key = "#result.id", condition = "#input.enabled == true")
+    public ProductDetailOutput update(UUID productId, ProductInput input) {
         Product product = findProduct(productId);
         Category category = findCategory(input.getCategoryId());
 
@@ -39,6 +47,8 @@ public class ProductManagementApplicationService {
         product.setCategory(category);
 
         productRepository.save(product);
+
+        return mapper.convert(product, ProductDetailOutput.class);
     }
 
     public void enable(UUID productId) {

@@ -10,6 +10,7 @@ import com.algaworks.algashop.productcatalog.domain.model.category.CategoryNotFo
 import com.algaworks.algashop.productcatalog.domain.model.category.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoOperations;
@@ -31,6 +32,7 @@ public class CategoryQueryServiceImpl implements CategoryQueryApplicationService
     private final MongoOperations mongoOperations;
 
     @Override
+    @Cacheable(cacheNames = "algashop:categories-filter:v1", key = "'default'", condition = "#filter.isCacheable()")
     public PageModel<CategoryDetailOutput> filter(CategoryFilter filter) {
         Query query = queryWith(filter);
         long totalItems = mongoOperations.count(query, Category.class);
@@ -82,6 +84,7 @@ public class CategoryQueryServiceImpl implements CategoryQueryApplicationService
     }
 
     @Override
+    @Cacheable(cacheNames = "algashop:categories:v1", key = "#categoryId")
     public CategoryDetailOutput findById(UUID categoryId) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CategoryNotFoundException(categoryId));

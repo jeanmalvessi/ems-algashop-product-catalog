@@ -58,7 +58,13 @@ class ProductBase {
         mockValidProductFindById();
         mockFilterProducts();
         mockCreateProduct();
+        mockValidProductUpdate();
         mockInvalidProductFindById();
+    }
+
+    private void mockValidProductUpdate() {
+        Mockito.when(productManagementApplicationService.update(Mockito.any(UUID.class), Mockito.any(ProductInput.class)))
+                .thenReturn(ProductDetailOutputTestDataBuilder.aProduct().id(validProductId).build());
     }
 
     private void mockInvalidProductFindById() {
@@ -76,7 +82,7 @@ class ProductBase {
             .thenReturn(productDetailOutput);
 
         Mockito.when(productQueryService.findById(createdProductId))
-            .thenReturn(ProductDetailOutputTestDataBuilder.aProduct().inStock(false).build());
+            .thenReturn(productDetailOutput);
     }
 
     private void mockFilterProducts() {

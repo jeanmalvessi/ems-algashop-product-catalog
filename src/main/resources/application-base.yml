@@ -9,6 +9,18 @@ spring:
 logging:
   level:
     org.mongodb.driver.cluster: OFF
+management:
+  info:
+    env.enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+info:
+  app.name: AlgaShop Product Catalog API
 algashop:
   data-load:
     enabled: false

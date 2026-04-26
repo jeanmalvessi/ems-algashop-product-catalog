@@ -1,0 +1,8 @@
+spring:
+  cache:
+    type: 'redis'
+  mongodb:
+    uri: 'mongodb://mongodb-1:27017,mongodb-2:27018,mongodb-3:27019/product_catalog?replicaSet=rs0'
+  data:
+    redis:
+      host: 'redis'

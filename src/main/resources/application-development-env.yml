@@ -12,10 +12,10 @@ spring:
       timeout: 30
 logging:
   level:
-    org.mongodb.driver.protocol.command: DEBUG
+    org.mongodb.driver.protocol.command: 'DEBUG'
     #org.mongodb.driver.protocol.query: DEBUG
     #org.mongodb.driver.connection: DEBUG
-    org.mongodb.driver.cluster: OFF
+    org.mongodb.driver.cluster: 'OFF'
 algashop:
   data-load:
     enabled: true

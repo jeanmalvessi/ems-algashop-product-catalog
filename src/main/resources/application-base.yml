@@ -1,5 +1,5 @@
 server:
-  port: '8083'
+  port: 8083
 spring:
   application:
     name: 'product-catalog'
@@ -8,25 +8,32 @@ spring:
       auto-index-creation: true
 logging:
   level:
-    org.mongodb.driver.cluster: OFF
+    org.mongodb.driver.cluster: 'OFF'
 management:
   info:
     env.enabled: true
+  health:
+    redis.enabled: false
   endpoints:
     web:
       exposure:
-        include: health,info
+        include: 'health,info'
   endpoint:
     health:
-      show-details: always
+      show-details: 'always'
+      group:
+        readiness:
+          include: 'mongo,readinessState'
+      status:
+        order: "DOWN,OUT_OF_SERVICE,UNKNOWN,DEGRADED,UP"
 info:
-  app.name: AlgaShop Product Catalog API
+  app.name: 'AlgaShop Product Catalog API'
 algashop:
   data-load:
     enabled: false
     auto-delete: false
     sources:
-      - location: db/testdata/categories.json
-        collection: categories
-      - location: db/testdata/products.json
-        collection: products
+      - location: 'db/testdata/categories.json'
+        collection: 'categories'
+      - location: 'db/testdata/products.json'
+        collection: 'products'

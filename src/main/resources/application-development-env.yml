@@ -10,6 +10,17 @@ spring:
       password: 'algashop'
       database: 0
       timeout: 30
+  cloud:
+    aws:
+      region:
+        static: 'us-east-1'
+      endpoint: 'http://localstack:4566'
+      credentials:
+        access-key: 'LSIAQAAAAAAVNCBMPNSG'
+        secret-key: 'test'
+      s3:
+        enabled: true
+        path-style-access-enabled: true
 logging:
   level:
     org.mongodb.driver.protocol.command: 'DEBUG'
@@ -21,4 +32,7 @@ algashop:
     enabled: true
     auto-delete: true
   mapping:
-    image-storage-url: 'http://localhost:4566/product-image'
+    image-storage-url: 'http://localstack:4566/product-image'
+  storage:
+    s3:
+      bucket-name: 'product-image'

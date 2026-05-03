@@ -1,24 +1,35 @@
 package com.algaworks.algashop.productcatalog.infrastructure.utility.mapper;
 
+import com.algaworks.algashop.productcatalog.application.product.query.ImageOutput;
 import com.algaworks.algashop.productcatalog.application.product.query.ProductDetailOutput;
+import com.algaworks.algashop.productcatalog.application.product.query.ProductSummaryOutput;
 import com.algaworks.algashop.productcatalog.application.utility.Mapper;
+import com.algaworks.algashop.productcatalog.domain.model.product.Image;
 import com.algaworks.algashop.productcatalog.domain.model.product.Product;
 import com.algaworks.algashop.productcatalog.infrastructure.utility.Slugfier;
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.modelmapper.convention.NamingConventions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ModelMapperConfig {
 
+    @Autowired
+    private ApplicationMappingProperty applicationMappingPropery;
+
     private final Converter<String, String> fromStringToSlugConverter = ctx ->
             Slugfier.slugify(ctx.getSource());
 
-    /*private final Converter<String, String> fromStringToShortStringConverter = ctx ->
-            StringUtils.abbreviate(ctx.getSource(), 50);*/
+    private final Converter<String, String> fromStringToShortStringConverter = ctx ->
+            StringUtils.abbreviate(ctx.getSource(), 50);
+
+    private final Converter<String, String> fromFileNameToUrlConverter = ctx ->
+            this.convertFromFileNameToUrl(ctx.getSource());
 
     @Bean
     public Mapper mapper() {
@@ -33,18 +44,25 @@ public class ModelMapperConfig {
             .setDestinationNamingConvention(NamingConventions.NONE)
             .setMatchingStrategy(MatchingStrategies.STRICT);
 
+        modelMapper.createTypeMap(Image.class, ImageOutput.class)
+                .addMappings(mapper -> mapper.using(fromFileNameToUrlConverter)
+                        .map(Image::getName, ImageOutput::setUrl));
+
+        modelMapper.createTypeMap(Product.class, ProductSummaryOutput.class)
+                .addMappings(mapper -> mapper.using(fromStringToShortStringConverter)
+                        .map(Product::getDescription, ProductSummaryOutput::setShortDescription));
+
         modelMapper.createTypeMap(Product.class, ProductDetailOutput.class)
             .addMappings(mapping -> mapping.using(fromStringToSlugConverter)
                 .map(Product::getName, ProductDetailOutput::setSlug)
             );
+    }
 
-        /*modelMapper.createTypeMap(Product.class, ProductSummaryOutput.class)
-            .addMappings(mapping -> {
-                    mapping.using(fromStringToSlugConverter)
-                        .map(Product::getName, ProductSummaryOutput::setSlug);
-                    mapping.using(fromStringToShortStringConverter)
-                        .map(Product::getDescription, ProductSummaryOutput::setShortDescription);
-                }
-            );*/
+    private String convertFromFileNameToUrl(String fileName) {
+        if (StringUtils.isBlank(fileName)) {
+            return null;
+        }
+        String imageStorageUrl = applicationMappingPropery.getImageStorageUrl();
+        return imageStorageUrl + "/" + fileName;
     }
 }

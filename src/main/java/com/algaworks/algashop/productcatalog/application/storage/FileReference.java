@@ -6,7 +6,7 @@ import org.springframework.http.MediaType;
 import java.time.Duration;
 import java.util.Objects;
 
-public record FileReference(String fileName, MediaType contentType, Long contentLength, Duration expiresIn) {
+public record FileReference(String fileName, MediaType contentType, Long contentLength, Duration expiresIn, boolean allowPublicRead) {
 
     @Builder
     public FileReference {

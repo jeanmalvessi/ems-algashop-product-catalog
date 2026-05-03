@@ -2,6 +2,8 @@ package com.algaworks.algashop.productcatalog.infrastructure.storage.s3;
 
 import com.algaworks.algashop.productcatalog.application.storage.FileReference;
 import com.algaworks.algashop.productcatalog.application.storage.StorageProvider;
+import io.awspring.cloud.s3.ObjectMetadata;
+import io.awspring.cloud.s3.S3Exception;
 import io.awspring.cloud.s3.S3Template;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -30,8 +32,28 @@ public class StorageProviderAwsS3Impl implements StorageProvider {
     @Override
     @SneakyThrows
     public URL requestUploadUrl(FileReference fileReference) {
-        return URI.create(String.format("http://localhost:4566/%s?token=%s",
-                fileReference.fileName(), UUID.randomUUID())).toURL();
+        String key = fileReference.fileName();
+        if (fileExists(key)) {
+            throw new StorageProviderException(String.format("Remote file %s already exists", key));
+        }
+
+        ObjectMetadata.Builder metadataBuilder = ObjectMetadata.builder();
+
+        if (fileReference.allowPublicRead()) {
+            metadataBuilder.acl("public-read");
+        }
+
+        try {
+            return s3Template.createSignedPutURL(
+                properties.getBucketName(),
+                key,
+                fileReference.expiresIn(),
+                metadataBuilder.build(),
+                fileReference.contentType().toString()
+            );
+        } catch (S3Exception e) {
+            throw new StorageProviderException(String.format("Unknown error when tried to create presigned URL for file %s", key), e);
+        }
     }
 
     @Override
@@ -40,6 +62,6 @@ public class StorageProviderAwsS3Impl implements StorageProvider {
 
     @Override
     public boolean fileExists(String remoteFileName) {
-        return !remoteFileName.equals("fail.jpg");
+        return s3Template.objectExists(properties.getBucketName(), remoteFileName);
     }
 }

@@ -23,6 +23,8 @@ Built using **Contract-Driven Development (CDD)** with Spring Cloud Contract, an
 - **Java 25**, Spring Boot 4.0.0
 - **Spring Data MongoDB** + MongoDB 8 (3-node replica set for transaction support)
 - **Spring Cache** + Redis 8.4 (server-side caching — Cache-Aside and Write-Through patterns, CacheEvict invalidation)
+- **Spring Cloud AWS S3** (product image storage)
+- **Spring Boot Actuator** (monitoring and health checks)
 - **HTTP Caching:** ETags, Last-Modified, and Cache-Control headers on product endpoints (1-minute cache)
 - **Spring Cloud Contract 5.0.0** (contract verification + stub publication for consumers)
 - **Spring REST Docs** (API documentation generated from MockMvc tests, published as AsciiDoc)

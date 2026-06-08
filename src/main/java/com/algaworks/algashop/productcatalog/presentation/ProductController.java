@@ -8,12 +8,12 @@ import com.algaworks.algashop.productcatalog.application.product.query.ProductFi
 import com.algaworks.algashop.productcatalog.application.product.query.ProductQueryService;
 import com.algaworks.algashop.productcatalog.application.product.query.ProductSummaryOutput;
 import com.algaworks.algashop.productcatalog.domain.model.category.CategoryNotFoundException;
+import com.algaworks.algashop.productcatalog.infrastructure.security.SecurityAnnotations.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
@@ -30,7 +30,8 @@ public class ProductController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('SCOPE_products:write')")
+    //@PreAuthorize("hasAuthority('SCOPE_products:write')")
+    @CanWriteProducts
     public ProductDetailOutput create(@RequestBody @Valid ProductInput input) {
         try {
             return productManagementApplicationService.create(input);
@@ -40,27 +41,31 @@ public class ProductController {
     }
 
     @PutMapping("/{productId}")
-    @PreAuthorize("hasAuthority('SCOPE_products:write')")
+    //@PreAuthorize("hasAuthority('SCOPE_products:write')")
+    @CanWriteProducts
     public ProductDetailOutput update(@PathVariable UUID productId, @RequestBody @Valid ProductInput input) {
         return productManagementApplicationService.update(productId, input);
     }
 
     @PutMapping("/{productId}/enable")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAuthority('SCOPE_products:write')")
+    //@PreAuthorize("hasAuthority('SCOPE_products:write')")
+    @CanWriteProducts
     public void enable(@PathVariable UUID productId) {
         productManagementApplicationService.enable(productId);
     }
 
     @DeleteMapping("/{productId}/enable")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAuthority('SCOPE_products:write')")
+    //@PreAuthorize("hasAuthority('SCOPE_products:write')")
+    @CanWriteProducts
     public void disable(@PathVariable UUID productId) {
         productManagementApplicationService.disable(productId);
     }
 
     @GetMapping("/{productId}")
-    @PreAuthorize("hasAuthority('SCOPE_products:read')")
+    //@PreAuthorize("hasAuthority('SCOPE_products:read')")
+    @CanReadProducts
     public ResponseEntity<ProductDetailOutput> findById(@PathVariable UUID productId) {
         /*if (productId.equals(UUID.fromString("5805e415-1ca0-45e2-9764-6fd5d1eb2339"))) {
             return ResponseEntity.badRequest().build();
@@ -81,21 +86,24 @@ public class ProductController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('SCOPE_products:read')")
+    //@PreAuthorize("hasAuthority('SCOPE_products:read')")
+    @CanReadProducts
     public PageModel<ProductSummaryOutput> filter(ProductFilter filter) {
         return productQueryService.filter(filter);
     }
 
     @PostMapping("/{productId}/restock")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAuthority('SCOPE_products:stock:write')")
+    //@PreAuthorize("hasAuthority('SCOPE_products:stock:write')")
+    @CanWriteProductsStock
     public void restock(@PathVariable UUID productId, @RequestBody @Valid ProductQuantityModel productQuantityModel) {
         productManagementApplicationService.restock(productId, productQuantityModel.getQuantity());
     }
 
     @PostMapping("/{productId}/withdraw")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAuthority('SCOPE_products:stock:write')")
+    //@PreAuthorize("hasAuthority('SCOPE_products:stock:write')")
+    @CanWriteProductsStock
     public void withdraw(@PathVariable UUID productId, @RequestBody @Valid ProductQuantityModel productQuantityModel) {
         productManagementApplicationService.withdraw(productId, productQuantityModel.getQuantity());
     }

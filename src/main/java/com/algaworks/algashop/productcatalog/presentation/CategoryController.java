@@ -6,6 +6,7 @@ import com.algaworks.algashop.productcatalog.application.category.management.Cat
 import com.algaworks.algashop.productcatalog.application.category.query.CategoryDetailOutput;
 import com.algaworks.algashop.productcatalog.application.category.query.CategoryFilter;
 import com.algaworks.algashop.productcatalog.application.category.query.CategoryQueryApplicationService;
+import com.algaworks.algashop.productcatalog.infrastructure.security.SecurityAnnotations.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.CacheControl;
@@ -28,6 +29,7 @@ public class CategoryController {
     private final CategoryManagementApplicationService categoryManagementApplicationService;
 
     @GetMapping
+    @CanReadCategories
     public ResponseEntity<PageModel<CategoryDetailOutput>> filter(CategoryFilter filter, WebRequest webRequest) {
         if (!filter.isCacheable()) {
             PageModel<CategoryDetailOutput> result = categoryQueryApplicationService.filter(filter);
@@ -49,12 +51,14 @@ public class CategoryController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @CanWriteCategories
     public CategoryDetailOutput create(@RequestBody @Valid CategoryInput input) {
         UUID categoryId = categoryManagementApplicationService.create(input);
         return categoryQueryApplicationService.findById(categoryId);
     }
 
     @GetMapping("/{categoryId}")
+    @CanReadCategories
     public ResponseEntity<CategoryDetailOutput> findById(@PathVariable UUID categoryId) {
         CategoryDetailOutput category = categoryQueryApplicationService.findById(categoryId);
         return ResponseEntity.ok()
@@ -65,15 +69,15 @@ public class CategoryController {
     }
 
     @PutMapping("/{categoryId}")
-    public CategoryDetailOutput update(
-            @PathVariable UUID categoryId,
-            @RequestBody @Valid CategoryInput input) {
+    @CanWriteCategories
+    public CategoryDetailOutput update(@PathVariable UUID categoryId, @RequestBody @Valid CategoryInput input) {
         categoryManagementApplicationService.update(categoryId, input);
         return categoryQueryApplicationService.findById(categoryId);
     }
 
     @DeleteMapping("/{categoryId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CanWriteCategories
     public void disable(@PathVariable UUID categoryId) {
         categoryManagementApplicationService.disable(categoryId);
     }

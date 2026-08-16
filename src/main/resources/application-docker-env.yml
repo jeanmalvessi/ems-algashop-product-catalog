@@ -1,8 +1,8 @@
 spring:
   cache:
-    type: 'redis'
+    type: redis
   mongodb:
-    uri: 'mongodb://mongodb-1:27017,mongodb-2:27018,mongodb-3:27019/product_catalog?replicaSet=rs0'
+    uri: mongodb://algashop-mongodb-1:27017,algashop-mongodb-2:27018,algashop-mongodb-3:27019/product_catalog?replicaSet=rs0
   data:
     redis:
-      host: 'redis'
+      host: algashop-redis

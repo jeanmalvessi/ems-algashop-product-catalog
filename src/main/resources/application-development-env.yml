@@ -37,6 +37,9 @@ logging:
     #org.mongodb.driver.protocol.query: DEBUG
     #org.mongodb.driver.connection: DEBUG
     org.mongodb.driver.cluster: OFF
+    #com.netflix.discovery.DiscoveryClient: OFF
+    #com.netflix.discovery: OFF
+    #com.netflix.eureka: OFF
 algashop:
   data-load:
     enabled: true
@@ -49,7 +52,7 @@ algashop:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://service-registry:8761/eureka
+      defaultZone: ${shared.params.service-registry-url}/eureka
     healthcheck:
       enabled: true
   instance:

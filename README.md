@@ -2,8 +2,6 @@
 
 Microservice responsible for managing products and categories in the [AlgaShop](https://github.com/jeanmalvessi/ems-algashop-meta) platform.
 
-Built using **Contract-Driven Development (CDD)** with Spring Cloud Contract, and API documentation generated automatically from tests via Spring REST Docs.
-
 ## Responsibilities
 
 - Product registration, updates, enable/disable lifecycle

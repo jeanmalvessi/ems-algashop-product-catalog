@@ -37,6 +37,9 @@ spring:
       fail-fast: true # Falha rápida caso não consiga se conectar ao cluster
       auto-create: true # Permite a criação automática de tópicos caso não existam
       modify-topic-configs: false # Impede a modificação de configurações de tópicos existentes
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer # chave - string
+      value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer # conteúdo - json
 logging:
   level:
     org.mongodb.driver.protocol.command: DEBUG

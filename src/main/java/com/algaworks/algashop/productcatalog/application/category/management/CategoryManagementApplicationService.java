@@ -1,6 +1,6 @@
 package com.algaworks.algashop.productcatalog.application.category.management;
 
-import com.algaworks.algashop.productcatalog.application.ApplicationMessagePublisher;
+import com.algaworks.algashop.productcatalog.application.LocalEventPublisher;
 import com.algaworks.algashop.productcatalog.application.category.event.CategoryUpdatedEvent;
 import com.algaworks.algashop.productcatalog.domain.model.category.Category;
 import com.algaworks.algashop.productcatalog.domain.model.category.CategoryNotFoundException;
@@ -18,7 +18,7 @@ import java.util.UUID;
 public class CategoryManagementApplicationService {
 
     private final CategoryRepository categoryRepository;
-    private final ApplicationMessagePublisher applicationMessagePublisher;
+    private final LocalEventPublisher localEventPublisher;
 
     @CacheEvict(value = "algashop:categories-filter:v1", key = "'default'")
     public UUID create(@Valid CategoryInput input) {
@@ -40,7 +40,7 @@ public class CategoryManagementApplicationService {
         category.setEnabled(input.getEnabled());
         categoryRepository.save(category);
         
-        applicationMessagePublisher.send(new CategoryUpdatedEvent(
+        localEventPublisher.send(new CategoryUpdatedEvent(
                 category.getId(),
                 category.getName(),
                 category.getEnabled()
@@ -53,7 +53,7 @@ public class CategoryManagementApplicationService {
         category.setEnabled(false);
         categoryRepository.save(category);
 
-        applicationMessagePublisher.send(new CategoryUpdatedEvent(
+        localEventPublisher.send(new CategoryUpdatedEvent(
                 category.getId(),
                 category.getName(),
                 category.getEnabled()

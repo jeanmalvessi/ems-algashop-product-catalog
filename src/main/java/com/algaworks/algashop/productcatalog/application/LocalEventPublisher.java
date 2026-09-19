@@ -1,5 +1,5 @@
 package com.algaworks.algashop.productcatalog.application;
 
-public interface ApplicationMessagePublisher {
+public interface LocalEventPublisher {
     void send(Object message);
 }

@@ -1,0 +1,22 @@
+package com.algaworks.algashop.productcatalog.application.product.event;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+import java.time.OffsetDateTime;
+import java.util.UUID;
+
+@Getter
+@Setter
+@ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class ProductDelistedIntegrationEvent {
+    private UUID productId;
+    private OffsetDateTime delistedAt;
+}

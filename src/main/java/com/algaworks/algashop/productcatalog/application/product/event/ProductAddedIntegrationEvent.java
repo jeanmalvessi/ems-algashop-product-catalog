@@ -12,9 +12,9 @@ import java.util.UUID;
 @Data
 @ToString
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class ProductListedIntegrationEvent {
+@NoArgsConstructor
+public class ProductAddedIntegrationEvent {
     private UUID productId;
-    private OffsetDateTime listedAt;
+    private OffsetDateTime addedAt;
 }

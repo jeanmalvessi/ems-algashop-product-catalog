@@ -1,6 +1,7 @@
 package com.algaworks.algashop.productcatalog.infrastructure.listener.product;
 
 import com.algaworks.algashop.productcatalog.application.IntegrationEventPublisher;
+import com.algaworks.algashop.productcatalog.application.product.event.ProductAddedIntegrationEvent;
 import com.algaworks.algashop.productcatalog.application.product.event.ProductDelistedIntegrationEvent;
 import com.algaworks.algashop.productcatalog.application.product.event.ProductListedIntegrationEvent;
 import com.algaworks.algashop.productcatalog.application.utility.Mapper;
@@ -37,7 +38,8 @@ public class ProductEventListener {
     @EventListener(ProductAddedEvent.class)
     public void handle(ProductAddedEvent event) {
         log.info("ProductAddedEvent " + event);
-        //integrationEventPublisher.send(event, event.getProductId().toString(),"product-catalog.product.events");
+        var integrationEvent = mapper.convert(event, ProductAddedIntegrationEvent.class);
+        integrationEventPublisher.send(integrationEvent, integrationEvent.getProductId().toString(),"product-catalog.product.events");
     }
 
     @Async

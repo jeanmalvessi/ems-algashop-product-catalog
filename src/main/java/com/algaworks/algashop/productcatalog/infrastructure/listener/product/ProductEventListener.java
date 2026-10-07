@@ -5,6 +5,7 @@ import com.algaworks.algashop.productcatalog.application.product.event.ProductDe
 import com.algaworks.algashop.productcatalog.application.product.event.ProductIntegrationEventPublisher;
 import com.algaworks.algashop.productcatalog.application.product.event.ProductListedIntegrationEvent;
 import com.algaworks.algashop.productcatalog.application.product.event.ProductPriceChangedIntegrationEvent;
+import com.algaworks.algashop.productcatalog.application.product.event.ProductPriceChangedV2IntegrationEvent;
 import com.algaworks.algashop.productcatalog.application.utility.Mapper;
 import com.algaworks.algashop.productcatalog.domain.model.product.ProductAddedEvent;
 import com.algaworks.algashop.productcatalog.domain.model.product.ProductDelistedEvent;
@@ -33,6 +34,9 @@ public class ProductEventListener {
         log.info("ProductPriceChangedEvent " + event);
         var integrationEvent = mapper.convert(event, ProductPriceChangedIntegrationEvent.class);
         integrationEventPublisher.send(integrationEvent);
+
+        var v2IntegrationEvent = mapper.convert(event, ProductPriceChangedV2IntegrationEvent.class);
+        integrationEventPublisher.send(v2IntegrationEvent);
     }
 
     @Async

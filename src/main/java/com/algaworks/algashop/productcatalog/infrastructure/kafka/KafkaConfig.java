@@ -1,8 +1,7 @@
 package com.algaworks.algashop.productcatalog.infrastructure.kafka;
 
-import com.algaworks.algashop.productcatalog.application.IntegrationEvent;
-import com.algaworks.algashop.productcatalog.application.IntegrationEventPublisher;
 import com.algaworks.algashop.productcatalog.application.product.event.ProductIntegrationEventPublisher;
+import com.algaworks.algashop.productcatalog.infrastructure.utility.BeanValidationUtil;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,7 +23,12 @@ public class KafkaConfig {
     }
 
     @Bean
-    public ProductIntegrationEventPublisher productIntegrationEventPublisher(KafkaTemplate<String, Object> kafkaTemplate, AlgaShopMessagingKafkaProperties properties) {
-        return event -> kafkaTemplate.send(properties.getProductEventTopicName(), event.getAggregateId(), event);
+    public ProductIntegrationEventPublisher productIntegrationEventPublisher(KafkaTemplate<String, Object> kafkaTemplate,
+                                                                             AlgaShopMessagingKafkaProperties properties,
+                                                                             BeanValidationUtil beanValidationUtil) {
+        return event -> {
+            beanValidationUtil.validate(event);
+            kafkaTemplate.send(properties.getProductEventTopicName(), event.getAggregateId(), event);
+        };
     }
 }

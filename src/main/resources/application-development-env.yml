@@ -38,6 +38,7 @@ spring:
       auto-create: true # Permite a criação automática de tópicos caso não existam
       modify-topic-configs: false # Impede a modificação de configurações de tópicos existentes
     producer:
+      acks: all # Acknowledgements - 0: o producer não espera confirmação nenhuma. Escreveu no socket, considerou enviado. 1: espera só o líder gravar no log local dele. all: espera todas as réplicas em sincronia (as in-sync replicas) confirmarem
       key-serializer: org.apache.kafka.common.serialization.StringSerializer # chave - string
       value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer # conteúdo - json
       #retries: 100 # 2147483647 (Integer.MAX_VALUE) é o padrão
@@ -45,7 +46,7 @@ spring:
         #retry.backoff.ms: 100 # espera inicial entre uma tentativa e outra
         #retry.backoff.max.ms: 1000 # teto do backoff, que cresce a cada nova tentativa
         request.timeout.ms: 5000 # tempo de UMA ida ao broker esperando a resposta
-        delivery.timeout.ms: 10000 # teto da operação inteira: envio + retries + backoff + confirmação
+        delivery.timeout.ms: 30000 # teto da operação inteira: envio + retries + backoff + confirmação
         max.block.ms: 5000 # tempo que o próprio send() pode bloquear antes de existir future
         spring.json.type.mapping:
           ProductCatalog.ProductDelistedIntegrationEvent:com.algaworks.algashop.product.catalog.application.product.event.ProductDelistedIntegrationEvent,

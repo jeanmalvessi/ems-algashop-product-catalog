@@ -1,5 +1,6 @@
 package com.algaworks.algashop.productcatalog.presentation;
 
+import com.algaworks.algashop.productcatalog.application.EventPublishingException;
 import com.algaworks.algashop.productcatalog.application.ResourceNotFoundException;
 import com.algaworks.algashop.productcatalog.domain.model.DomainEntityNotFoundException;
 import com.algaworks.algashop.productcatalog.domain.model.DomainException;
@@ -65,6 +66,16 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         problemDetail.setTitle("Not found");
         problemDetail.setDetail(exception.getMessage());
         problemDetail.setType(URI.create("/errors/not-found"));
+        return problemDetail;
+    }
+
+    @ExceptionHandler(EventPublishingException.class)
+    public ProblemDetail handleEventPublishingException(EventPublishingException exception) {
+        log.error(exception.getMessage(), exception);
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.SERVICE_UNAVAILABLE);
+        problemDetail.setTitle("Service unavailable");
+        problemDetail.setDetail("Failed to publish event"); //exception.getMessage() to return class name + agg ID
+        problemDetail.setType(URI.create("/errors/service-unavailable"));
         return problemDetail;
     }
 

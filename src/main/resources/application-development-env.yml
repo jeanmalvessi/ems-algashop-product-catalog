@@ -43,6 +43,7 @@ spring:
       value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer # conteúdo - json
       #retries: 100 # 2147483647 (Integer.MAX_VALUE) é o padrão
       properties:
+        enable.idempotence: true # true ja é o padrão
         #retry.backoff.ms: 100 # espera inicial entre uma tentativa e outra
         #retry.backoff.max.ms: 1000 # teto do backoff, que cresce a cada nova tentativa
         request.timeout.ms: 5000 # tempo de UMA ida ao broker esperando a resposta

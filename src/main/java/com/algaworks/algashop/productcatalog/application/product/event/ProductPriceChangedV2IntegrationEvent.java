@@ -1,6 +1,7 @@
 package com.algaworks.algashop.productcatalog.application.product.event;
 
 import com.algaworks.algashop.productcatalog.application.IntegrationEvent;
+import com.algaworks.algashop.productcatalog.domain.model.IdGenerator;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,6 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductPriceChangedV2IntegrationEvent implements IntegrationEvent {
+    private UUID idempotencyKey = IdGenerator.generateTimeBasedUUID();
     @NotNull
     private UUID productId;
     @NotNull

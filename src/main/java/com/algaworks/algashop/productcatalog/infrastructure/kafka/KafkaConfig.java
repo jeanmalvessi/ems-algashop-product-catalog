@@ -5,6 +5,7 @@ import com.algaworks.algashop.productcatalog.application.product.event.ProductIn
 import com.algaworks.algashop.productcatalog.infrastructure.utility.BeanValidationUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,8 +41,14 @@ public class KafkaConfig {
 
             SendResult<String, Object> result = null;
             try {
-                result = kafkaTemplate.send(properties.getProductEventTopicName(), event.getAggregateId(), event)
-                        .get(40, TimeUnit.SECONDS);
+                ProducerRecord<String, Object> producerRecord = new ProducerRecord<>(
+                        properties.getProductEventTopicName(),
+                        event.getAggregateId(),
+                        event);
+
+                producerRecord.headers().add("idempotency-key", event.getIdempotencyKey().toString().getBytes());
+
+                result = kafkaTemplate.send(producerRecord).get(40, TimeUnit.SECONDS);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 throw new EventPublishingException("Interrupted while publishing", event, e);
@@ -51,7 +58,7 @@ public class KafkaConfig {
 
             RecordMetadata metadata = result.getRecordMetadata();
 
-            log.info("Publihed {} to {}-{} at offset {}",
+            log.info("Published {} to {}-{} at offset {}",
                     event.getClass().getSimpleName(),
                     metadata.topic(),
                     metadata.partition(),

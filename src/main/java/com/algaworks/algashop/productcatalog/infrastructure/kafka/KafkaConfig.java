@@ -23,6 +23,9 @@ import java.util.concurrent.TimeoutException;
 @Slf4j
 public class KafkaConfig {
 
+    public static final String TYPE_ID_HEADER = "__TypeId__";
+    public static final String IDEMPOTENCY_KEY_HEADER = "idempotency-key";
+
     @Bean
     public NewTopic productsEventTopic() {
         return TopicBuilder.name("product-catalog.product.events") // [application-name].[domain/aggregate].events
@@ -47,7 +50,7 @@ public class KafkaConfig {
                         event);
 
                 if (event.getIdempotencyKey() != null) {
-                    producerRecord.headers().add("idempotency-key", event.getIdempotencyKey().toString().getBytes());
+                    producerRecord.headers().add(IDEMPOTENCY_KEY_HEADER, event.getIdempotencyKey().toString().getBytes());
                 }
 
                 result = kafkaTemplate.send(producerRecord).get(40, TimeUnit.SECONDS);
